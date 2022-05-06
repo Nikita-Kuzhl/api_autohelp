@@ -1,3 +1,4 @@
+import { LogInUserDto } from './dto/log-in.dto';
 import { User } from './../users/users.model';
 import { UsersService } from './../users/users.service';
 import { CreateUserDto } from './../users/dto/create_user.dto';
@@ -11,7 +12,7 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
   ) {}
-  async login(userDto: CreateUserDto) {
+  async login(userDto: LogInUserDto) {
     const user = await this.validateUser(userDto);
     return this.generateToken(user);
   }
@@ -36,13 +37,13 @@ export class AuthService {
     const payload = {
       telephone: user.telephone,
       id: user.id,
-      roles: user.roles,
+      roles:user.roles,
     };
     return {
       token: this.jwtService.sign(payload),
     };
   }
-  private async validateUser(userDto: CreateUserDto) {
+  private async validateUser(userDto: CreateUserDto|LogInUserDto) {
     const user = await this.userService.getUserByTelephone(userDto.telephone);
     if (!user) {
       throw new HttpException(

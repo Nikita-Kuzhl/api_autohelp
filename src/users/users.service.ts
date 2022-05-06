@@ -1,5 +1,4 @@
 import { RolesService } from './../roles/roles.service';
-import { Op } from 'sequelize/types';
 import { CreateUserDto } from './dto/create_user.dto';
 import { User } from './users.model';
 import { Injectable } from '@nestjs/common';
