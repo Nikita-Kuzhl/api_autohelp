@@ -1,11 +1,9 @@
-import { Product } from 'src/products/products.model';
 import { User } from './../users/users.model';
 import { ApiProperty } from '@nestjs/swagger';
 import { Model, Column, DataType, Table, ForeignKey, BelongsTo } from 'sequelize-typescript';
 
 interface CartCreationAttr{
   userId:number;
-  productId:number;
 }
 @Table({tableName:'cart'})
 export class Cart extends Model<Cart,CartCreationAttr>{
@@ -24,12 +22,5 @@ export class Cart extends Model<Cart,CartCreationAttr>{
 
   @BelongsTo(() => User)
   user: User;
-
-  @ForeignKey(() => Product)
-  @Column({type:DataType.INTEGER})
-  productId: number;
-
-  @BelongsTo(() => Product)
-  products: Product;
 
 }

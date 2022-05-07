@@ -1,3 +1,5 @@
+import { CartItem } from './cart_item/cart-item.model';
+import { CartItemModule } from './cart_item/cart-item.module';
 import { Cart } from './cart/cart.model';
 import { CartModule } from './cart/cart.module';
 import { Category } from './category/category.model';
@@ -18,6 +20,7 @@ import * as path from 'path';
 
 @Module({
   imports: [
+    CartItemModule,
     CartModule,
     CategoryModule,
     FilesModule,
@@ -35,7 +38,7 @@ import * as path from 'path';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [User, Role, Product, Category,Cart],
+      models: [User, Role, Product, Category, Cart,CartItem],
       autoLoadModels: true,
     }),
     ServeStaticModule.forRoot({

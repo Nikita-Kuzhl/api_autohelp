@@ -19,10 +19,6 @@ export class UsersService {
     return users;
   }
   async getUserByTelephone(telephone: string) {
-    // const user = await this.userRepository.findOne({
-    //   where: { [Op.or]: [{ telephone }, { email }] },
-    //   include: { all: true },
-    // });
     const user = await this.userRepository.findOne({
       where: {telephone},
       include: { all: true },

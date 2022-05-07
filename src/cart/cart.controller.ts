@@ -18,7 +18,10 @@ export class CartController {
     return this.cartService.getCart(id);
   }
   @Delete('/:id')
-  delItemCart(@Param('id') id: number) {
-    return this.cartService.delItem(id);
+  delCart(@Param('id') id: number) {
+    return this.cartService.delCart(id);
+  }
+  delCartItem(){
+    
   }
 }
