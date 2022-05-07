@@ -7,7 +7,7 @@ import { CartController } from './cart.controller';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Cart]),ProductsModule,UsersModule],
+  imports: [SequelizeModule.forFeature([Cart])],
   controllers: [CartController],
   providers: [CartService],
 })

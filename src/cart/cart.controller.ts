@@ -1,8 +1,24 @@
+import { AddCartDto } from './dto/add-cart.dto';
+import { CartService } from './cart.service';
 /*
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
-@Controller()
-export class CartController {}
+@Controller('/cart')
+export class CartController {
+  constructor(private cartService: CartService) {}
+  @Post('/add')
+  addCart(@Body() dto: AddCartDto) {
+    return this.cartService.addItem(dto);
+  }
+  @Get('/:id')
+  getCart(@Param('id') id: number) {
+    return this.cartService.getCart(id);
+  }
+  @Delete('/:id')
+  delItemCart(@Param('id') id: number) {
+    return this.cartService.delItem(id);
+  }
+}
