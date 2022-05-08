@@ -23,7 +23,7 @@ export class Category extends Model<Category, CreateCategoryAttr> {
   name:string;
 
   @ApiProperty({example:'Бла бла'})
-  @Column({type:DataType.STRING})
+  @Column({type:DataType.TEXT})
   description:string;
 
   @ApiProperty({example:'beb1ri3bib3.jpg'})

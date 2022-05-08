@@ -16,6 +16,7 @@ export class Cart extends Model<Cart,CartCreationAttr>{
   })
   id: number;
 
+  @ApiProperty({example:1})
   @ForeignKey(() => User)
   @Column({type:DataType.INTEGER})
   userId: number;

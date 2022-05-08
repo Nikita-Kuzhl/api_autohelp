@@ -8,6 +8,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { ApiProperty } from '@nestjs/swagger';
 
 interface CreateCartItemAttr {
   cartId: number;
@@ -17,6 +18,7 @@ interface CreateCartItemAttr {
 
 @Table({ tableName: 'cart_item' })
 export class CartItem extends Model<CartItem, CreateCartItemAttr> {
+  @ApiProperty({example:1})
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -24,15 +26,18 @@ export class CartItem extends Model<CartItem, CreateCartItemAttr> {
     primaryKey: true,
   })
   id: number;
+  @ApiProperty({example:1})
   @Column({ type: DataType.INTEGER })
   repeat: number;
 
+  @ApiProperty({example:1})
   @ForeignKey(() => Product)
   @Column({ type: DataType.INTEGER })
   productId: number;
   @BelongsTo(() => Product)
   products: Product;
 
+  @ApiProperty({example:1})
   @ForeignKey(() => Cart)
   @Column({ type: DataType.INTEGER })
   cartId: number;

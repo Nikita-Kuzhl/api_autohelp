@@ -13,14 +13,14 @@ export class CartItemService {
       const cartItem = await this.cartItemRepository.findOne({where:{cartId,productId}})
       if(cartItem){
         let repeat = cartItem.repeat + 1
-        let cartUpd =  await this.cartItemRepository.update({repeat:repeat},{where:{cartId:cartId,productId:productId}})
+        await this.cartItemRepository.update({repeat:repeat},{where:{cartId:cartId,productId:productId}})
         let cart = await this.findAll(cartId)
         return cart
       }
       const cartCreateItem = await this.cartItemRepository.create({cartId,productId,repeat:1})
       return cartCreateItem
     } catch (error) {
-      return
+      throw new HttpException(error,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
   async findAll(cartId:number){
@@ -36,8 +36,12 @@ export class CartItemService {
     const cartDelItem = this.cartItemRepository.destroy({where:{cartId:dto.cartId,productId:dto.productId}})
     return cartDelItem
   }
-  async delete(cartId:number){
-    const cartItem = this.cartItemRepository.destroy({where:{cartId}})
-    return cartItem
+  async delete(cartId:number,productId:number){
+      try {
+        const cartItem = this.cartItemRepository.destroy({where:{cartId,productId}})
+        return cartItem
+      } catch (error) {
+        return error
+      }
   }
 }

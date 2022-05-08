@@ -6,6 +6,8 @@ export class CreateProductDto {
   readonly description: string;
   @ApiProperty({example:'123123'})
   readonly price: number;
+  @ApiProperty({example:'8 часов'})
+  readonly time: string;
   @ApiProperty({example:'123123',type:'file'})
   readonly image:any;
   @ApiProperty({example:'1'})

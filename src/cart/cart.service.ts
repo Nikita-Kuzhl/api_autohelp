@@ -1,9 +1,7 @@
 import { CartItemService } from './../cart_item/cart-item.service';
-import { CartItem } from './../cart_item/cart-item.model';
-import { Product } from 'src/products/products.model';
 import { Cart } from './cart.model';
 import { AddCartDto } from './dto/add-cart.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
@@ -15,13 +13,13 @@ export class CartService {
   async addItem(dto: AddCartDto) {
     const cartRepeat = await this.cartRepository.findOne({
       where: { userId: dto.userId },
-    });    
+    });
     if (cartRepeat) {
-      await this.cartItemService.create(cartRepeat.id,dto.productId);
+      await this.cartItemService.create(cartRepeat.id, dto.productId);
       const cart = await this.cartItemService.findAll(cartRepeat.id);
       return { message: 'Товар добавлен', cart };
     }
-    const cartAdd = await this.cartRepository.create({userId:dto.userId});
+    const cartAdd = await this.cartRepository.create({ userId: dto.userId });
     await this.cartItemService.create(cartAdd.id, dto.productId);
     const cart = await this.cartItemService.findAll(cartAdd.id);
     return { message: 'Товар добавлен', cart };
@@ -37,12 +35,27 @@ export class CartService {
     const cart = await this.cartRepository.destroy({ where: { id: id } });
     return { message: 'Коризна удалёна', cart };
   }
-  async delCartItem(dto: AddCartDto){
+  async delCartItemOne(dto: AddCartDto) {
+    try {
+      const cartUser = await this.cartRepository.findOne({
+        where: { userId: dto.userId },
+      });
+      await this.cartItemService.deleteItem({
+        cartId: cartUser.id,
+        productId: dto.productId,
+      });
+      const cart = await this.cartItemService.findAll(cartUser.id);
+      return { message: 'Товар удалён', cart };
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  async delCartItem(dto: AddCartDto) {
     const cartUser = await this.cartRepository.findOne({
       where: { userId: dto.userId },
     });
-    const cart = await this.cartItemService.deleteItem({cartId:cartUser.id,productId:dto.productId})
-    return cart
+    await this.cartItemService.delete(cartUser.id, dto.productId);
+    const cart = await this.cartItemService.findAll(cartUser.id);
+    return { message: 'Товар удалён', cart };
   }
-
 }
