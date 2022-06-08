@@ -6,8 +6,11 @@ import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class CategoryService {
-  constructor(@InjectModel(Category) private categoryRepository: typeof Category,private filesService:FilesService){}
-  async create(dto: CreateCategoryDto,image:any){
+  constructor(
+    @InjectModel(Category) private categoryRepository: typeof Category,
+    private filesService: FilesService,
+  ) {}
+  async create(dto: CreateCategoryDto, image: any) {
     const fileName = await this.filesService.createFile(image);
     const category = await this.categoryRepository.create({
       ...dto,
@@ -15,15 +18,24 @@ export class CategoryService {
     });
     return category;
   }
-  async getAll(){
-    const category = await this.categoryRepository.findAll()
-    return category
+  async getAll() {
+    const category = await this.categoryRepository.findAll();
+    return category;
   }
-  async getCatByValue(id:number):Promise<Category>{
-    const category = await this.categoryRepository.findOne({where:{id}})
-    if(!category){
-      throw new HttpException('Такой категории не существует',HttpStatus.BAD_REQUEST)
+  async getCatByValue(id: number): Promise<Category> {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new HttpException(
+        'Такой категории не существует',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    return category
+    return category;
+  }
+  async getCatBySubCatValue(id: number): Promise<Category[]> {
+    const cateegorys = await this.categoryRepository.findAll({
+      where: { subcategoryId: id },
+    });
+    return cateegorys;
   }
 }

@@ -2,7 +2,12 @@ import { LogInUserDto } from './dto/log-in.dto';
 import { User } from './../users/users.model';
 import { UsersService } from './../users/users.service';
 import { CreateUserDto } from './../users/dto/create_user.dto';
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -37,13 +42,14 @@ export class AuthService {
     const payload = {
       telephone: user.telephone,
       id: user.id,
-      roles:user.roles,
+      roles: user.roles,
     };
     return {
       token: this.jwtService.sign(payload),
+      role: payload.roles.value,
     };
   }
-  private async validateUser(userDto: CreateUserDto|LogInUserDto) {
+  private async validateUser(userDto: CreateUserDto | LogInUserDto) {
     const user = await this.userService.getUserByTelephone(userDto.telephone);
     if (!user) {
       throw new HttpException(
@@ -58,6 +64,6 @@ export class AuthService {
     if (user && passwordEquals) {
       return user;
     }
-    throw new UnauthorizedException({message:'Неверный пароль'})
+    throw new UnauthorizedException({ message: 'Неверный пароль' });
   }
 }

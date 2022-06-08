@@ -12,7 +12,15 @@ export class RolesService {
   }
   async getRoleByValue(value: string) {
     const role = await this.roleRepository.findOne({ where: { value } });
-    if(!role)throw new HttpException('Такой роли не существует',HttpStatus.BAD_REQUEST)
+    if (!role)
+      throw new HttpException(
+        'Такой роли не существует',
+        HttpStatus.BAD_REQUEST,
+      );
     return role;
+  }
+  async getAllRoles() {
+    const roles = await this.roleRepository.findAll();
+    return roles;
   }
 }

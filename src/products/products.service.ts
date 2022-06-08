@@ -1,4 +1,3 @@
-import { FilesService } from './../files/files.service';
 import { Product } from './products.model';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
@@ -8,18 +7,13 @@ import { InjectModel } from '@nestjs/sequelize';
 export class ProductsService {
   constructor(
     @InjectModel(Product) private productRepository: typeof Product,
-    private filesService: FilesService,
   ) {}
-  async create(dto: CreateProductDto, image: any) {
-    const fileName = await this.filesService.createFile(image);
-    const post = await this.productRepository.create({
-      ...dto,
-      image: fileName,
-    });
+  async create(dto: CreateProductDto) {
+    const post = await this.productRepository.create(dto);
     return post;
   }
   async getAll() {
-    const products = this.productRepository.findAll({ include: { all: true } });
+    const products = this.productRepository.findAll();
     return products;
   }
   async findAllCat(id: number) {

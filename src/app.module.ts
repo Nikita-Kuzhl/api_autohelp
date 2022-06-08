@@ -1,3 +1,7 @@
+import { Orders } from './orders/orders.model';
+import { OrdersModule } from './orders/orders.module';
+import { SubCategory } from './subcategory/subcategory.model';
+import { SubcategoryModule } from './subcategory/subcategory.module';
 import { CartItem } from './cart_item/cart-item.model';
 import { CartItemModule } from './cart_item/cart-item.module';
 import { Cart } from './cart/cart.model';
@@ -20,6 +24,8 @@ import * as path from 'path';
 
 @Module({
   imports: [
+    OrdersModule,
+    SubcategoryModule,
     CartItemModule,
     CartModule,
     CategoryModule,
@@ -38,7 +44,16 @@ import * as path from 'path';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [User, Role, Product, Category, Cart,CartItem],
+      models: [
+        User,
+        Role,
+        Product,
+        Category,
+        Cart,
+        CartItem,
+        SubCategory,
+        Orders,
+      ],
       autoLoadModels: true,
     }),
     ServeStaticModule.forRoot({

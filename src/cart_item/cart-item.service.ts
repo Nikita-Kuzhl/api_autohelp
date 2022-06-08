@@ -1,3 +1,4 @@
+import { CategoryService } from './../category/category.service';
 import { Product } from 'src/products/products.model';
 import { CreateCartItemDto } from './dto/cart-item.dto';
 import { CartItem } from './cart-item.model';
@@ -6,42 +7,59 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class CartItemService {
-  constructor(@InjectModel(CartItem)private cartItemRepository: typeof CartItem){}
+  constructor(
+    @InjectModel(CartItem) private cartItemRepository: typeof CartItem, // private CategortService: CategoryService,
+  ) {}
 
-  async create(cartId:number,productId:number){
+  async create(cartId: number, productId: number) {
     try {
-      const cartItem = await this.cartItemRepository.findOne({where:{cartId,productId}})
-      if(cartItem){
-        let repeat = cartItem.repeat + 1
-        await this.cartItemRepository.update({repeat:repeat},{where:{cartId:cartId,productId:productId}})
-        let cart = await this.findAll(cartId)
-        return cart
+      const cartItem = await this.cartItemRepository.findOne({
+        where: { cartId, productId },
+      });
+      if (cartItem) {
+        return new HttpException('Услуга уже в корзине', 200);
       }
-      const cartCreateItem = await this.cartItemRepository.create({cartId,productId,repeat:1})
-      return cartCreateItem
+      const cartCreateItem = await this.cartItemRepository.create({
+        cartId,
+        productId,
+        repeat: 1,
+      });
+      return cartCreateItem;
     } catch (error) {
-      throw new HttpException(error,HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  async findAll(cartId:number){
-    const cartItem = await this.cartItemRepository.findAll({where:{cartId},include:Product})
-    return cartItem
-  }
-  async deleteItem(dto:CreateCartItemDto){
-    const cartItem = await this.cartItemRepository.findOne({where:{cartId:dto.cartId,productId:dto.productId}})
-    if(cartItem.repeat>1){
-      let repeat = cartItem.repeat - 1
-      return await this.cartItemRepository.update({repeat:repeat},{where:{cartId:dto.cartId,productId:dto.productId}})
+  async findAll(cartId: number) {
+    const cartItem = await this.cartItemRepository.findAll({
+      attributes: ['productId'],
+      where: { cartId },
+      include: Product,
+    });
+    if (!cartItem) {
+      throw new HttpException('Корзина пуста', HttpStatus.ACCEPTED);
     }
-    const cartDelItem = this.cartItemRepository.destroy({where:{cartId:dto.cartId,productId:dto.productId}})
-    return cartDelItem
+    // cartItem.forEach((item) => {
+    //   // @ts-ignore
+    //   return (item.products.image = this.CategortService.getCatByValue(
+    //     item.products.categoryId,
+    //   ));
+    // });
+    return cartItem;
   }
-  async delete(cartId:number,productId:number){
-      try {
-        const cartItem = this.cartItemRepository.destroy({where:{cartId,productId}})
-        return cartItem
-      } catch (error) {
-        return error
-      }
+  async deleteItem(cartId: number) {
+    const cartDelItem = this.cartItemRepository.destroy({
+      where: { cartId: cartId },
+    });
+    return cartDelItem;
+  }
+  async delete(cartId: number, productId: number) {
+    try {
+      const cartItem = this.cartItemRepository.destroy({
+        where: { cartId, productId },
+      });
+      return cartItem;
+    } catch (error) {
+      return error;
+    }
   }
 }

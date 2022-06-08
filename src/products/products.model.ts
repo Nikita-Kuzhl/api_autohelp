@@ -11,10 +11,10 @@ import {
 
 interface ProductCreateAttr {
   name: string;
-  description: string;
+  // description: string;
   price: number;
-  time: string;
-  image: string;
+  // time: string;
+  // image: string;
   categoryId: number;
 }
 
@@ -33,22 +33,23 @@ export class Product extends Model<Product, ProductCreateAttr> {
   @Column({ type: DataType.STRING, unique: true })
   name: string;
 
-  @ApiProperty({ example: 'Бла бла' })
-  @Column({ type: DataType.STRING })
-  description: string;
+  // @ApiProperty({ example: 'Бла бла' })
+  // @Column({ type: DataType.TEXT })
+  // description: string;
 
   @ApiProperty({ example: 123 })
   @Column({ type: DataType.INTEGER })
   price: number;
 
-  @ApiProperty({ example: '8 часов' })
-  @Column({ type: DataType.STRING })
-  time: string;
+  // @ApiProperty({ example: '8 часов' })
+  // @Column({ type: DataType.STRING })
+  // time: string;
 
-  @ApiProperty({ example: 'beb1ri3bib3.jpg' })
-  @Column({ type: DataType.STRING })
-  image: string;
+  // @ApiProperty({ example: 'beb1ri3bib3.jpg' })
+  // @Column({ type: DataType.STRING })
+  // image: string;
 
+  @ApiProperty({ example: 1 })
   @ForeignKey(() => Category)
   @Column(DataType.INTEGER)
   categoryId: number;

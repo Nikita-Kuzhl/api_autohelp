@@ -7,8 +7,9 @@ import { CategoryController } from './category.controller';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Category]),FilesModule,AuthModule],
+  imports: [SequelizeModule.forFeature([Category]), FilesModule, AuthModule],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

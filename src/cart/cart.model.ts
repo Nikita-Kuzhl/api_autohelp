@@ -1,4 +1,4 @@
-import { User } from './../users/users.model';
+import { User } from '../users/users.model';
 import { ApiProperty } from '@nestjs/swagger';
 import { Model, Column, DataType, Table, ForeignKey, BelongsTo } from 'sequelize-typescript';
 
